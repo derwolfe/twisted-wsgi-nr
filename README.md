@@ -12,3 +12,5 @@ As long as your docker daemon is running, just typing `./runner.sh` should get t
 
 ### New Relic
 The application is setup in developer mode. This means that New Relic is installed, but that none of the data it collects will be sent to their servers.
+
+Instead of using a configuration file, the docker file uses environment variables.
