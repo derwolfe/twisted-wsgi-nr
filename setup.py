@@ -21,6 +21,5 @@ setup(
         'falcon',
         'twisted',
         'newrelic',
-        'structlog'
     ],
 )
