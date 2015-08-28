@@ -12,22 +12,15 @@ from twisted.internet import reactor
 from structlog import get_logger, configure, twisted
 from structlog.stdlib import LoggerFactory
 
-configure(
-   processors=[twisted.JSONRenderer()],
-   context_class=dict,
-   logger_factory=twisted.LoggerFactory(),
-   wrapper_class=twisted.BoundLogger,
-   cache_logger_on_first_use=True,
-)
-
-log = get_logger()
+from twisted.logger import Logger
+log = Logger()
 
 
 class QuoteResource(object):
 
     def on_get(self, req, resp):
         """Handles GET requests"""
-        log.info('quoted', whom='me')
+        log.warn('quoted', whom='me')
         quote = {
             'quote': 'I\'ve always been more interested in the future than in the past.',
             'author': 'Grace Hopper'
