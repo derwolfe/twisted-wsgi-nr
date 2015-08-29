@@ -1,6 +1,8 @@
 Using New Relic with Twisted as a WSGI app Server
 =================================================
 
+XXX NEEDS TESTS
+
 This repository is meant to show an example of how to setup Twisted, New Relic, and a WSGI app.
 
 ### Building
