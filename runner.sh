@@ -11,3 +11,4 @@ docker run -p 8713:8713 -d \
        -e NEW_RELIC_LOG_LEVEL="info" \
        --name twisted-wsgi-nr \
        twisted-wsgi-nr
+docker logs -f twisted-wsgi-nr

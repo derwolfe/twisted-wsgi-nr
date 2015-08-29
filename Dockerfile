@@ -15,6 +15,7 @@ RUN pip install --upgrade pip
 ADD . /twisted_wsgi_nr
 WORKDIR /twisted_wsgi_nr
 
+RUN pip install -r requirements.txt
 RUN python setup.py install
 
 EXPOSE 8713
