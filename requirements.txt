@@ -1,0 +1,5 @@
+falcon
+twisted
+structlog
+newrelic
+-e .
