@@ -12,11 +12,11 @@ setup(
     url='',
     entry_points={
         'console_scripts': [
-            'pleasework = twisted_wsgi_nr.test:run'
+            'pleasework = twisted_wsgi_nr:run'
         ],
     },
     license='MIT',
-    packages=find_packages(),
+    py_modules=['twisted_wsgi_nr'],
     install_requires=[
         'falcon',
         'twisted',

@@ -9,8 +9,6 @@ from twisted.web.wsgi import WSGIResource
 from twisted.web.server import Site, Request
 from twisted.internet import reactor
 
-from structlog import get_logger, configure, twisted
-from structlog.stdlib import LoggerFactory
 
 from twisted.logger import Logger
 log = Logger()
