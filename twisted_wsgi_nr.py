@@ -25,24 +25,24 @@ class QuoteResource(object):
             'quote': 'I\'ve always been more interested in the future than in the past.',
             'author': 'Grace Hopper'
         }
-        log = logger.new()
-        log.bind(whom=quote["author"], what=quote["quote"])
+        log = logger.new(whom=quote["author"], what=quote["quote"])
         log.msg("quoted!")
         resp.body = json.dumps(quote)
 
 
 def run():
     # api is the WSGI resource returned by Falcon.
+    startLogging(sys.stdout)
     structlog.configure(
         processors=[
+            structlog.processors.StackInfoRenderer(),
             structlog.twisted.JSONRenderer()
         ],
         context_class=dict,
         logger_factory=structlog.twisted.LoggerFactory(),
-        # wrapper_class=structlog.twisted.BoundLogger,
+        wrapper_class=structlog.twisted.BoundLogger,
         cache_logger_on_first_use=True,
     )
-    startLogging(sys.stderr)
 
     api = falcon.API()
     api.add_route('/quote', QuoteResource())
