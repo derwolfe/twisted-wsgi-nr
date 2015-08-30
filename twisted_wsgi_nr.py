@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import newrelic.agent
 newrelic.agent.initialize()
 
@@ -11,8 +13,8 @@ import structlog
 from twisted.web.wsgi import WSGIResource
 from twisted.web.server import Site, Request
 from twisted.internet import reactor
-from twisted.python.log import startLogging
-
+#from twisted.python.log import startLogging
+from twisted.logger import
 
 logger = structlog.getLogger()
 
@@ -32,17 +34,22 @@ class QuoteResource(object):
 
 def run():
     # api is the WSGI resource returned by Falcon.
-    startLogging(sys.stdout)
     structlog.configure(
         processors=[
             structlog.processors.StackInfoRenderer(),
-            structlog.twisted.JSONRenderer()
+            # either the json or the event can be used!
+            structlog.twisted.JSONRenderer(),
+            #structlog.twisted.EventAdapter()
         ],
-        context_class=dict,
         logger_factory=structlog.twisted.LoggerFactory(),
+        context_class=dict,
         wrapper_class=structlog.twisted.BoundLogger,
         cache_logger_on_first_use=True,
     )
+    # configure a wrapper log observer
+
+
+    startLogging(sys.stdout)
 
     api = falcon.API()
     api.add_route('/quote', QuoteResource())
@@ -53,3 +60,7 @@ def run():
 
     reactor.listenTCP(port=8713, factory=site)
     reactor.run()
+
+
+if __name__ == '__main__':
+    run()
