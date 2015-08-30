@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import newrelic.agent
 newrelic.agent.initialize()
 
@@ -11,10 +13,15 @@ import structlog
 from twisted.web.wsgi import WSGIResource
 from twisted.web.server import Site, Request
 from twisted.internet import reactor
-from twisted.python.log import startLogging
+from twisted.logger import Logger, FileLogObserver, globalLogPublisher
 
+# output = textFileLogObserver(sys.stdout)
+# log = Logger(observer=jsonFileLogObserver(sys.stdout),
+#              namespace="saver")
+# logger = structlog.getLogger()
 
-logger = structlog.getLogger()
+log = Logger()
+globalLogPublisher.addObserver(FileLogObserver(sys.stdout))
 
 
 class QuoteResource(object):
@@ -25,24 +32,25 @@ class QuoteResource(object):
             'quote': 'I\'ve always been more interested in the future than in the past.',
             'author': 'Grace Hopper'
         }
-        log = logger.new(whom=quote["author"], what=quote["quote"])
-        log.msg("quoted!")
+        log.info(quote) # whom=quote["author"], what=quote["quote"])
+        #log = logger.new(whom=quote["author"], what=quote["quote"])
+        #log.msg("quoted!")
         resp.body = json.dumps(quote)
 
 
 def run():
     # api is the WSGI resource returned by Falcon.
-    startLogging(sys.stdout)
-    structlog.configure(
-        processors=[
-            structlog.processors.StackInfoRenderer(),
-            structlog.twisted.JSONRenderer()
-        ],
-        context_class=dict,
-        logger_factory=structlog.twisted.LoggerFactory(),
-        wrapper_class=structlog.twisted.BoundLogger,
-        cache_logger_on_first_use=True,
-    )
+    # startLogging(sys.stdout)
+    # structlog.configure(
+    #     processors=[
+    #         structlog.processors.StackInfoRenderer(),
+    #         structlog.twisted.JSONRenderer()
+    #     ],
+    #     context_class=dict,
+    #     logger_factory=structlog.twisted.LoggerFactory(),
+    #     wrapper_class=structlog.twisted.BoundLogger,
+    #     cache_logger_on_first_use=True,
+    # )
 
     api = falcon.API()
     api.add_route('/quote', QuoteResource())
