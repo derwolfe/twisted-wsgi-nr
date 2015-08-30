@@ -44,9 +44,7 @@ structlog.configure(
     ],
     context_class=dict,
     logger_factory=structlog.twisted.LoggerFactory(),
-    wrapper_class=structlog.twisted.JSONLogObserverWrapper(
-        structlog.twisted.BoundLogger
-    ),
+    wrapper_class=structlog.twisted.BoundLogger,
     cache_logger_on_first_use=True,
 )
 
