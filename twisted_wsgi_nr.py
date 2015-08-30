@@ -53,3 +53,6 @@ def run():
 
     reactor.listenTCP(port=8713, factory=site)
     reactor.run()
+
+if __name__ == '__main__':
+    run()
