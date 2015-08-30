@@ -11,7 +11,12 @@ import structlog
 from twisted.web.wsgi import WSGIResource
 from twisted.web.server import Site, Request
 from twisted.internet import reactor
-from twisted.python.log import startLogging
+from twisted.application.service import Application
+
+from twisted.application.internet import (
+    TCPServer,
+    SSLServer
+)
 
 
 logger = structlog.getLogger()
@@ -30,26 +35,30 @@ class QuoteResource(object):
         resp.body = json.dumps(quote)
 
 
-def run():
-    # api is the WSGI resource returned by Falcon.
-    startLogging(sys.stdout)
-    structlog.configure(
-        processors=[
-            structlog.processors.StackInfoRenderer(),
-            structlog.twisted.JSONRenderer()
-        ],
-        context_class=dict,
-        logger_factory=structlog.twisted.LoggerFactory(),
-        wrapper_class=structlog.twisted.BoundLogger,
-        cache_logger_on_first_use=True,
-    )
+#def run():
+# api is the WSGI resource returned by Falcon.
+structlog.configure(
+    processors=[
+        structlog.processors.StackInfoRenderer(),
+        structlog.twisted.JSONRenderer(),
+    ],
+    context_class=dict,
+    logger_factory=structlog.twisted.LoggerFactory(),
+    wrapper_class=structlog.twisted.JSONLogObserverWrapper(
+        structlog.twisted.BoundLogger
+    ),
+    cache_logger_on_first_use=True,
+)
 
-    api = falcon.API()
-    api.add_route('/quote', QuoteResource())
+wsgi_app = falcon.API()
+wsgi_app.add_route('/quote', QuoteResource())
 
-    app = newrelic.agent.WSGIApplicationWrapper(api)
-    resource = WSGIResource(reactor, reactor.getThreadPool(), app)
-    site = Site(resource)
+app = newrelic.agent.WSGIApplicationWrapper(wsgi_app)
 
-    reactor.listenTCP(port=8713, factory=site)
-    reactor.run()
+resource = WSGIResource(reactor, reactor.getThreadPool(), app)
+site = Site(resource)
+site.displayTracebacks = False
+
+application = Application("twisted-wsgi-newrelic-test")
+wsgi_service = TCPServer(8713, site)
+wsgi_service.setServiceParent(application)

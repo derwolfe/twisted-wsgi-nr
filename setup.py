@@ -26,11 +26,11 @@ setup(
     author="Chris Wolfe",
     author_email="chriswwolfe@gmail.com",
     url="https://github.com/derwolfe/twisted-wsgi-nr",
-    entry_points={
-        "console_scripts": [
-            "pleasework = twisted_wsgi_nr:run"
-        ],
-    },
+    # entry_points={
+    #     "console_scripts": [
+    #         "pleasework = twisted_wsgi_nr:run"
+    #     ],
+    # },
     license="MIT",
     py_modules=["twisted_wsgi_nr"],
     install_requires=[
