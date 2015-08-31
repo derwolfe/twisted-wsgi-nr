@@ -4,11 +4,11 @@ import newrelic.agent
 newrelic.agent.initialize()
 
 import logging
-import falcon
 import json
 import os
 import sys
 
+import falcon
 import structlog
 
 from twisted.web.wsgi import WSGIResource
@@ -19,8 +19,6 @@ from twisted.python import log as twLog
 #     Logger, FileLogObserver, globalLogPublisher,
 #     jsonFileLogObserver
 # )
-
-
 logger = structlog.getLogger()
 
 
@@ -55,7 +53,7 @@ def run():
     root_logger = logging.getLogger()
     root_logger.addHandler(handler)
 
-    # start the twisted logger and begin capturing it.
+    # start the twisted logger
     twLog.startLogging(sys.stdout)
     # api is the WSGI resource returned by Falcon.
     api = falcon.API()
