@@ -39,16 +39,6 @@ class QuoteResource(object):
 
 
 def run():
-    # grab all of the events that are dispatched to stdlib logger
-    # new relic uses this.
-    handler = logging.StreamHandler(sys.stdout)
-    root_logger = logging.getLogger()
-    root_logger.addHandler(handler)
-
-    # start the twisted logger and begin capturing it.
-    twLog.startLogging(sys.stdout)
-
-    #globalLogPublisher.addObserver(jsonFileLogObserver)
     structlog.configure(
         processors=[
             structlog.processors.StackInfoRenderer(),
@@ -59,6 +49,14 @@ def run():
         wrapper_class=structlog.twisted.BoundLogger,
         cache_logger_on_first_use=True,
     )
+    # grab all of the events that are dispatched to stdlib logger
+    # new relic uses this.
+    handler = logging.StreamHandler(sys.stdout)
+    root_logger = logging.getLogger()
+    root_logger.addHandler(handler)
+
+    # start the twisted logger and begin capturing it.
+    twLog.startLogging(sys.stdout)
     # api is the WSGI resource returned by Falcon.
     api = falcon.API()
     api.add_route('/quote', QuoteResource())
