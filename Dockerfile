@@ -20,4 +20,4 @@ RUN python setup.py install
 
 EXPOSE 8713
 
-ENTRYPOINT ["pleasework"]
+ENTRYPOINT ["twistd", "--logger", "structlog.twisted.plainJSONStdOutLogger", "-ny", "twisted_wsgi_nr.tac"]

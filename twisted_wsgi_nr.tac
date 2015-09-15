@@ -6,6 +6,7 @@ import json
 import os
 import sys
 
+import logging
 import structlog
 
 from twisted.web.wsgi import WSGIResource
@@ -47,6 +48,12 @@ structlog.configure(
     wrapper_class=structlog.twisted.BoundLogger,
     cache_logger_on_first_use=True,
 )
+
+# setup the root loggers
+handler = logging.StreamHandler(sys.stdout)
+root_logger = logging.getLogger()
+root_logger.addHandler(handler)
+
 
 wsgi_app = falcon.API()
 wsgi_app.add_route('/quote', QuoteResource())
